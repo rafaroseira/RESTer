@@ -98,7 +98,6 @@ function createHistoryNavItem(historyEntry) {
 function createEnvironmentNavItem(activeEnvironment) {
     return new Item({
         title: 'Environment',
-        subtitle: activeEnvironment && activeEnvironment.name,
         action: {
             url: '#/environments',
         },
