@@ -40,7 +40,7 @@ import './utils/rester-redirected-help-dialog.js';
 import './utils/rester-timing-duration-dialog.js';
 import './utils/rester-timing-size-dialog.js';
 import dialogs from './data/scripts/dialogs.js';
-import { getEnvironments } from './data/scripts/rester.js';
+import { getEnvironments, getEnvironment } from './data/scripts/rester.js';
 import RESTerThemeMixin from './data/rester-data-theme-mixin.js';
 import RESTerHotkeysMixin from './data/rester-data-hotkeys-mixin.js';
 import RESTerSettingsMixin from './data/rester-data-settings-mixin.js';
@@ -162,6 +162,18 @@ class RESTerApp extends RESTerThemeMixin(
                                     on-tap="_toggleDrawerExpand"
                                     hidden$="[[!showDrawerExpand]]"
                                 ></paper-icon-button>
+                                <div 
+                                    class="active-env-indicator" 
+                                    hidden$="[[!activeEnvironmentObj]]" 
+                                    on-tap="_showEnvironmentSelectDialog" 
+                                    style="display: flex; align-items: center; cursor: pointer; padding: 0 16px;">
+                                    <span 
+                                        style$="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: [[activeEnvironmentObj.color]]; margin-right: 8px; flex-shrink: 0;">
+                                    </span>
+                                    <span style="font-size: 14px; font-weight: 500;">
+                                        [[activeEnvironmentObj.name]]
+                                    </span>
+                                </div>
                                 <rester-notifications></rester-notifications>
                             </app-toolbar>
                         </app-header>
@@ -265,6 +277,10 @@ class RESTerApp extends RESTerThemeMixin(
                 type: String,
                 value: '640px',
             },
+            activeEnvironmentObj: {
+                type: Object,
+                value: null
+            }
         };
     }
 
@@ -273,7 +289,21 @@ class RESTerApp extends RESTerThemeMixin(
             '_routePageChanged(routeData.page)',
             '_expandSidenavChanged(settings.expandSidenav)',
             '_showDrawerLockChanged(showDrawerLock)',
+            '_activeEnvironmentIdChanged(settings.activeEnvironment)'
         ];
+    }
+
+    connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('active-environment-updated', (e) => {
+            if (e.detail) {
+                const env = Object.assign({}, e.detail);
+                env.color = env.color || '#808080'; 
+                this.set('activeEnvironmentObj', env);
+            } else if (this.settings.activeEnvironment) {
+                this._activeEnvironmentIdChanged(this.settings.activeEnvironment);
+            }
+        });
     }
 
     static get resterHotkeys() {
@@ -387,6 +417,21 @@ class RESTerApp extends RESTerThemeMixin(
     _showDrawerLockChanged(showDrawerLock) {
         const width = showDrawerLock ? this.appDrawerDefaultWidth : (this.settings.expandSidenav ? this.appDrawerExpandedWidth : this.appDrawerDefaultWidth);
         this.updateStyles({'--app-drawer-width': width});
+    }
+
+    _activeEnvironmentIdChanged(envId) {
+        if (!envId) {
+            this.activeEnvironmentObj = null;
+            return;
+        }
+        getEnvironment(Number(envId)).then(env => {
+            if (env) {
+                env.color = env.color || '#808080';
+                this.set('activeEnvironmentObj', Object.assign({}, env));
+            } else {
+                this.set('activeEnvironmentObj', null);
+            }
+        });
     }
 
 }
