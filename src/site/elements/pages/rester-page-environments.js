@@ -184,12 +184,6 @@ class RESTerPageEnvironments extends RESTerPageMixin(
                 } else {
                     this.push('environments', this._environmentInDialog);
                 }
-
-                if (Number(this.settings.activeEnvironment) === Number(id)) {
-                    window.dispatchEvent(new CustomEvent('active-environment-updated', {
-                        detail: this._environmentInDialog
-                    }));
-                }
             });
         } else if (
             result.reason.confirmed &&
@@ -197,10 +191,6 @@ class RESTerPageEnvironments extends RESTerPageMixin(
         ) {
             deleteEnvironment(this._environmentInDialog.id).then(() => {
                 this.splice('environments', this._environmentInDialogIndex, 1);
-
-               if (Number(this.settings.activeEnvironment) === Number(this._environmentInDialog.id)) {
-                    this.set('settings.activeEnvironment', null);
-                }
             });
         }
     }
