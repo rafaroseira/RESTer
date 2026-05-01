@@ -40,7 +40,11 @@ import './utils/rester-redirected-help-dialog.js';
 import './utils/rester-timing-duration-dialog.js';
 import './utils/rester-timing-size-dialog.js';
 import dialogs from './data/scripts/dialogs.js';
-import { getEnvironments, getEnvironment, e as resterEvents } from './data/scripts/rester.js';
+import {
+    getEnvironments,
+    getEnvironment,
+    e as resterEvents,
+} from './data/scripts/rester.js';
 import RESTerThemeMixin from './data/rester-data-theme-mixin.js';
 import RESTerHotkeysMixin from './data/rester-data-hotkeys-mixin.js';
 import RESTerSettingsMixin from './data/rester-data-settings-mixin.js';
@@ -195,18 +199,21 @@ class RESTerApp extends RESTerThemeMixin(
                                     on-tap="_toggleDrawerExpand"
                                     hidden$="[[!showDrawerExpand]]"
                                 ></paper-icon-button>
-                                <paper-button 
-                                    class="active-env-indicator" 
-                                    hidden$="[[!activeEnvironmentObj]]" 
-                                    on-tap="_showEnvironmentSelectDialog" 
+                                <paper-button
+                                    class="active-env-indicator"
+                                    hidden$="[[!activeEnvironmentObj]]"
+                                    on-tap="_showEnvironmentSelectDialog"
                                     title="Environment: [[activeEnvironmentObj.name]]"
                                 >
-                                    <span 
+                                    <span
                                         class="active-env-indicator-color"
-                                        style$="background-color: [[activeEnvironmentObj.color]];">
+                                        style$="background-color: [[activeEnvironmentObj.color]];"
+                                    >
                                     </span>
                                     <span class="active-env-indicator-name">
-                                        <span class="visually-hidden">Environment: </span>[[activeEnvironmentObj.name]]
+                                        <span class="visually-hidden"
+                                            >Environment: </span
+                                        >[[activeEnvironmentObj.name]]
                                     </span>
                                 </paper-button>
                                 <rester-notifications></rester-notifications>
@@ -314,8 +321,8 @@ class RESTerApp extends RESTerThemeMixin(
             },
             activeEnvironmentObj: {
                 type: Object,
-                value: null
-            }
+                value: null,
+            },
         };
     }
 
@@ -324,7 +331,7 @@ class RESTerApp extends RESTerThemeMixin(
             '_routePageChanged(routeData.page)',
             '_expandSidenavChanged(settings.expandSidenav)',
             '_showDrawerLockChanged(showDrawerLock)',
-            '_activeEnvironmentIdChanged(settings.activeEnvironment)'
+            '_activeEnvironmentIdChanged(settings.activeEnvironment)',
         ];
     }
 
@@ -341,13 +348,15 @@ class RESTerApp extends RESTerThemeMixin(
 
     _onDataChanged(e) {
         const envChange = e.detail.find(
-            change => change.itemType === 'Environment' && change.item.id === this.settings.activeEnvironment
+            (change) =>
+                change.itemType === 'Environment' &&
+                change.item.id === this.settings.activeEnvironment,
         );
 
         if (envChange) {
             if (envChange.action === 'put') {
                 const env = Object.assign({}, envChange.item);
-                env.color = env.color || '#808080'; 
+                env.color = env.color || '#808080';
                 this.set('activeEnvironmentObj', env);
             } else if (envChange.action === 'delete') {
                 this.set('activeEnvironmentObj', null);
@@ -397,7 +406,9 @@ class RESTerApp extends RESTerThemeMixin(
     }
 
     _getDrawerExpandToggleIcon() {
-        return this.settings.expandSidenav ? 'close-fullscreen' : 'open-in-full';
+        return this.settings.expandSidenav
+            ? 'close-fullscreen'
+            : 'open-in-full';
     }
 
     _toggleDrawerLockOpen() {
@@ -458,14 +469,22 @@ class RESTerApp extends RESTerThemeMixin(
     }
 
     _expandSidenavChanged(expandSidenav) {
-        const width = this.showDrawerLock ? this.appDrawerDefaultWidth : (expandSidenav ? this.appDrawerExpandedWidth : this.appDrawerDefaultWidth);
-        this.updateStyles({'--app-drawer-width': width});
+        const width = this.showDrawerLock
+            ? this.appDrawerDefaultWidth
+            : expandSidenav
+              ? this.appDrawerExpandedWidth
+              : this.appDrawerDefaultWidth;
+        this.updateStyles({ '--app-drawer-width': width });
         this.$.drawerLayout.resetLayout();
     }
 
     _showDrawerLockChanged(showDrawerLock) {
-        const width = showDrawerLock ? this.appDrawerDefaultWidth : (this.settings.expandSidenav ? this.appDrawerExpandedWidth : this.appDrawerDefaultWidth);
-        this.updateStyles({'--app-drawer-width': width});
+        const width = showDrawerLock
+            ? this.appDrawerDefaultWidth
+            : this.settings.expandSidenav
+              ? this.appDrawerExpandedWidth
+              : this.appDrawerDefaultWidth;
+        this.updateStyles({ '--app-drawer-width': width });
     }
 
     _activeEnvironmentIdChanged(envId) {
@@ -473,7 +492,7 @@ class RESTerApp extends RESTerThemeMixin(
             this.activeEnvironmentObj = null;
             return;
         }
-        getEnvironment(Number(envId)).then(env => {
+        getEnvironment(Number(envId)).then((env) => {
             if (env) {
                 env.color = env.color || '#808080';
                 this.set('activeEnvironmentObj', Object.assign({}, env));
@@ -482,7 +501,6 @@ class RESTerApp extends RESTerThemeMixin(
             }
         });
     }
-
 }
 
 customElements.define(RESTerApp.is, RESTerApp);

@@ -81,7 +81,7 @@ class RESTerEditEnvironmentDialog extends RESTerDialogControllerMixin(
                     margin-bottom: 4px;
                 }
 
-                .color-picker-container input[type="color"] {
+                .color-picker-container input[type='color'] {
                     cursor: pointer;
                     border: none;
                     padding: 0;
@@ -110,7 +110,10 @@ class RESTerEditEnvironmentDialog extends RESTerDialogControllerMixin(
                                 ></paper-input>
                                 <div class="color-picker-container">
                                     <label>Color</label>
-                                    <input type="color" value="{{data.color::input}}">
+                                    <input
+                                        type="color"
+                                        value="{{data.color::input}}"
+                                    />
                                 </div>
                             </div>
                             <template is="dom-repeat" items="[[valueItems]]">
