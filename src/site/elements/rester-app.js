@@ -131,7 +131,6 @@ class RESTerApp extends RESTerThemeMixin(
                 .active-env-indicator {
                     display: flex;
                     align-items: center;
-                    padding: 0 16px;
                     text-transform: none;
                 }
 
@@ -181,6 +180,23 @@ class RESTerApp extends RESTerThemeMixin(
                         <app-header slot="header" fixed>
                             <app-toolbar>
                                 <div main-title>RESTer</div>
+                                <paper-button
+                                    class="active-env-indicator"
+                                    hidden$="[[!activeEnvironmentObj]]"
+                                    on-tap="_showEnvironmentSelectDialog"
+                                    title="Environment: [[activeEnvironmentObj.name]]"
+                                >
+                                    <span
+                                        class="active-env-indicator-color"
+                                        style$="background-color: [[activeEnvironmentObj.color]];"
+                                    >
+                                    </span>
+                                    <span class="active-env-indicator-name">
+                                        <span class="visually-hidden"
+                                            >Environment: </span
+                                        >[[activeEnvironmentObj.name]]
+                                    </span>
+                                </paper-button>
                                 <iron-media-query
                                     query="[[showDrawerLockMediaQuery]]"
                                     query-matches="{{showDrawerLock}}"
@@ -199,23 +215,6 @@ class RESTerApp extends RESTerThemeMixin(
                                     on-tap="_toggleDrawerExpand"
                                     hidden$="[[!showDrawerExpand]]"
                                 ></paper-icon-button>
-                                <paper-button
-                                    class="active-env-indicator"
-                                    hidden$="[[!activeEnvironmentObj]]"
-                                    on-tap="_showEnvironmentSelectDialog"
-                                    title="Environment: [[activeEnvironmentObj.name]]"
-                                >
-                                    <span
-                                        class="active-env-indicator-color"
-                                        style$="background-color: [[activeEnvironmentObj.color]];"
-                                    >
-                                    </span>
-                                    <span class="active-env-indicator-name">
-                                        <span class="visually-hidden"
-                                            >Environment: </span
-                                        >[[activeEnvironmentObj.name]]
-                                    </span>
-                                </paper-button>
                                 <rester-notifications></rester-notifications>
                             </app-toolbar>
                         </app-header>
